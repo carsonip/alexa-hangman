@@ -1,0 +1,12 @@
+Play start
+Play start game
+Play play
+Play play again
+Play restart
+Play retry
+PickCategory {Category}
+Progress what's my Progress
+Progress Progress
+Progress my progress
+AMAZON.HelpIntent help
+Answer {Letter}
