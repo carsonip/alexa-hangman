@@ -69,9 +69,7 @@ function displayDictResult(word, partOfSpeech, definition, attributionText) {
     } else {
         renderTmpl1.call(this, `Definition of <b>${word}</b> not found.`, `Definition of, ${word}, not found. ${NEW_GAME}`, NEW_GAME);
     }
-
 }
-
 
 function askForLetter(ssmlContent) {
     ssmlContent = ssmlContent || '';
@@ -92,9 +90,15 @@ function promptNoActiveGame() {
     this.emit(':responseReady');
 }
 
+function existActiveGame() {
+    var word = this.attributes['word'];
+    var finish = this.attributes['finish'];
+    return !!word && !finish;
+}
+
 function answer(letter) {
     var word = this.attributes['word'];
-    if (!word) {
+    if (!existActiveGame.call(this)) {
         promptNoActiveGame.call(this);
         return;
     }
@@ -118,7 +122,7 @@ function answer(letter) {
         this.attributes['badGuessCnt'] += 1;
         this.attributes['misses'].push(letter);
         if (this.attributes['badGuessCnt'] >= MAX_BAD_GUESS) {
-            cleanup.call(this);
+            this.attributes['finish'] = true;
             ssmlContent += `Sorry! you've been hanged! The word is, ${word}, which is spelt, <say-as interpret-as="spell-out">${word}</say-as>. ${NEW_GAME} `;
             renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
             return;
@@ -127,7 +131,7 @@ function answer(letter) {
         ssmlContent += `Letter, <say-as interpret-as="spell-out">${letter}</say-as>, is at ${positions.length === 1 ? 'position' : 'positions'} ${positions.map(x => x + 1).join(', ')}. `;
     }
     if (this.attributes['guessed'].indexOf('_') === -1) {
-        cleanup.call(this);
+        this.attributes['finish'] = true;
         ssmlContent += `Great! You got the word, ${word}, which is spelt, <say-as interpret-as="spell-out">${word}</say-as>. ${NEW_GAME}`;
         renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
         return;
@@ -137,6 +141,7 @@ function answer(letter) {
 }
 
 function cleanup() {
+    this.attributes['finish'] = false;
     this.attributes['word'] = '';
     this.attributes['guessed'] = '';
     this.attributes['guessedLetters'] = [];
@@ -178,7 +183,7 @@ function getLetterCount(word) {
 
 function progress() {
     var word = this.attributes['word'];
-    if (!word) {
+    if (!existActiveGame.call(this)) {
         promptNoActiveGame.call(this);
         return;
     }
@@ -190,6 +195,14 @@ function progress() {
 function dictionary() {
     var that = this;
     var word = this.attributes['word'];
+    var finish = this.attributes['finish'];
+    if (!word) {
+        promptNoActiveGame.call(this);
+        return;
+    } else if (word && !finish) {
+        askForLetter.call(this, `You're not allowed to check the dictionary now.`);
+        return;
+    }
     var url = `http://api.wordnik.com:80/v4/word.json/${word}/definitions?limit=1&includeRelated=false&useCanonical=false&sourceDictionaries=wiktionary&includeTags=false&api_key=${WORDNIK_API_KEY}`;
     axios.get(url)
         .then(function (response) {
