@@ -138,7 +138,7 @@ function answer(letter) {
         this.attributes['misses'].push(letter);
         if (this.attributes['badGuessCnt'] >= MAX_BAD_GUESS) {
             this.attributes['finish'] = true;
-            ssmlContent += `Sorry! you've been hanged! The word is, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME} `;
+            ssmlContent += `Sorry! You've been hanged! The word is, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME} `;
             renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
             return;
         }
@@ -147,7 +147,7 @@ function answer(letter) {
     }
     if (this.attributes['guessed'].indexOf('_') === -1) {
         this.attributes['finish'] = true;
-        ssmlContent += `Great! You got the word, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME}`;
+        ssmlContent += `Great! You've got the word, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME}`;
         renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
         return;
     } else {
