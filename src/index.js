@@ -58,6 +58,20 @@ function renderTmpl1(richText, speechOutput, reprompt) {
     this.emit(':responseReady');
 }
 
+function renderWelcome() {
+    var text = `To begin the game, pick a category from ${CATEGORIES.join(', ')}, or simply say, Start.`;
+    const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
+
+    const template = builder.setTitle(TITLE)
+        .setTextContent(makePlainText('Welcome to Hangman Game'), makePlainText(text))
+        .build();
+
+    this.response.speak(`Welcome to Hangman Game! I'll pick a word, you'll guess it. ${text} `)
+        .listen(text)
+        .renderTemplate(template);
+    this.emit(':responseReady');
+}
+
 function displayDictResult(word, partOfSpeech, definition, attributionText) {
     if (definition) {
         renderTmpl1.call(
@@ -235,9 +249,7 @@ var handlers = {
         dictionary.call(this);
     },
     'AMAZON.HelpIntent': function () {
-        var speechOutput = `Welcome to Hangman Game! I'll pick a word, you'll guess it. To begin the game, pick a category from ${CATEGORIES.join(', ')}`;
-        var reprompt = `To begin the game, pick a category from ${CATEGORIES.join(', ')}`;
-        this.emit(':ask', speechOutput, reprompt);
+        renderWelcome.call(this);
     },
     'AMAZON.CancelIntent': function () {
         this.emit(':tell', 'Goodbye');
