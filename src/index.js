@@ -29,6 +29,7 @@ for (var i = 0; i < CATEGORIES.length; i++) {
     vocabs[CATEGORIES[i]] = require(`./wordlist/${CATEGORIES[i]}.json`);
 }
 const NEW_GAME = `Say, start, to begin a new game, or you can pick a category from ${CATEGORIES.join(', ')}. `
+const DICTIONARY = `Say, dictionary, to see the definition of this word. `;
 
 
 function renderGuessTmpl(speechOutput, reprompt) {
@@ -137,7 +138,7 @@ function answer(letter) {
         this.attributes['misses'].push(letter);
         if (this.attributes['badGuessCnt'] >= MAX_BAD_GUESS) {
             this.attributes['finish'] = true;
-            ssmlContent += `Sorry! you've been hanged! The word is, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${NEW_GAME} `;
+            ssmlContent += `Sorry! you've been hanged! The word is, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME} `;
             renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
             return;
         }
@@ -146,7 +147,7 @@ function answer(letter) {
     }
     if (this.attributes['guessed'].indexOf('_') === -1) {
         this.attributes['finish'] = true;
-        ssmlContent += `Great! You got the word, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${NEW_GAME}`;
+        ssmlContent += `Great! You got the word, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME}`;
         renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
         return;
     } else {
