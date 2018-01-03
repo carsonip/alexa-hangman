@@ -28,7 +28,7 @@ var vocabs = {};
 for (var i = 0; i < CATEGORIES.length; i++) {
     vocabs[CATEGORIES[i]] = require(`./wordlist/${CATEGORIES[i]}.json`);
 }
-const NEW_GAME = `Say, start, when you are ready for a new game, or you can pick a category from ${CATEGORIES.join(', ')}. `
+const NEW_GAME = `Say, start, to begin a new game, or you can pick a category from ${CATEGORIES.join(', ')}. `
 
 
 function renderGuessTmpl(speechOutput, reprompt) {
