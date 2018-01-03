@@ -13,6 +13,7 @@
   "author": "Carson Ip",
   "license": "Apache-2.0",
   "dependencies": {
-    "alexa-sdk": "^1.0.24"
+    "alexa-sdk": "^1.0.24",
+    "axios": "^0.17.1"
   }
 }

@@ -5,6 +5,16 @@ function ssmlEscape(speech) {
     return speech;
 }
 
+function displayXmlEscape(content) {
+    content = content.replace(/&/g, '&amp;');
+    content = content.replace(/"/g, '&quot;');
+    content = content.replace(/'/g, '&apos;');
+    content = content.replace(/</g, '&lt;');
+    content = content.replace(/>/g, '&gt;');
+    content = content.replace(/\\/g, '\\\\');
+    return content;
+}
+
 function objToArr(obj) {
     return Object.keys(obj).map((k) => obj[k]);
 }
@@ -27,5 +37,6 @@ String.prototype.replaceAt=function(index, replacement) {
 }
 
 exports.ssmlEscape = ssmlEscape;
+exports.displayXmlEscape = displayXmlEscape;
 exports.objToArr = objToArr;
 exports.randomItem = randomItem;

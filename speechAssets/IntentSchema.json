@@ -7,6 +7,9 @@
       "intent": "Progress"
     },
     {
+      "intent": "Dictionary"
+    },
+    {
       "intent": "PickCategory",
       "slots": [
         {

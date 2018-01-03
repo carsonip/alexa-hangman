@@ -4,8 +4,10 @@ const makePlainText = Alexa.utils.TextUtils.makePlainText;
 const makeRichText = Alexa.utils.TextUtils.makeRichText;
 const ImageUtils = Alexa.utils.ImageUtils;
 const utils = require('./utils.js');
+const axios = require('axios');
 const APP_ID = process.env.APP_ID || '';  // TODO replace with your app ID (OPTIONAL).
 const BASE_URL = process.env.BASE_URL;
+const WORDNIK_API_KEY = process.env.WORDNIK_API_KEY;
 
 const TITLE = 'Hangman Game';
 const MAX_BAD_GUESS = 6;
@@ -23,43 +25,70 @@ const CATEGORIES = [
     'food', 'fruit', 'shopping', 'sports', 'travel'
 ];
 var vocabs = {};
-for (var i=0;i<CATEGORIES.length;i++) {
+for (var i = 0; i < CATEGORIES.length; i++) {
     vocabs[CATEGORIES[i]] = require(`./wordlist/${CATEGORIES[i]}.json`);
 }
 const NEW_GAME = `Say, start, when you are ready for a new game, or you can pick a category from ${CATEGORIES.join(', ')}. `
 
 
-function renderTmpl(speechOutput, reprompt) {
+function renderGuessTmpl(speechOutput, reprompt) {
     const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
 
-	const template = builder.setTitle(TITLE)
-                            .setTextContent(makeRichText(`Word: ${this.attributes['guessed'].split('').join(' ')}<br/>Misses: ${this.attributes['misses'].join(',')}`))
-                            .setImage(ImageUtils.makeImage(`${BASE_URL}img/hangman/${this.attributes['badGuessCnt']}.png`))
-							.build();
+    const template = builder.setTitle(TITLE)
+        .setTextContent(makeRichText(`Word: ${this.attributes['guessed'].split('').join(' ')}<br/>Misses: ${this.attributes['misses'].join(',')}`))
+        .setImage(ImageUtils.makeImage(`${BASE_URL}img/hangman/${this.attributes['badGuessCnt']}.png`))
+        .build();
 
     this.response.speak(speechOutput)
-                .listen(reprompt)
-				.renderTemplate(template);
+        .listen(reprompt)
+        .renderTemplate(template);
     this.emit(':responseReady');
+}
+
+function renderTmpl1(richText, speechOutput, reprompt) {
+    const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+
+    const template = builder.setTitle(TITLE)
+        .setTextContent(makeRichText(richText))
+        .build();
+
+    this.response.speak(speechOutput)
+        .listen(reprompt)
+        .renderTemplate(template);
+    this.emit(':responseReady');
+}
+
+function displayDictResult(word, partOfSpeech, definition, attributionText) {
+    if (definition) {
+        renderTmpl1.call(
+            this,
+            `<font size="5">${utils.displayXmlEscape(word)}</font> <font size="2">(${utils.displayXmlEscape(partOfSpeech)})</font><br/>${utils.displayXmlEscape(definition)}<br/><br/><font size="2">${utils.displayXmlEscape(attributionText)}</font>`,
+            `${utils.ssmlEscape(word)}<break strength="strong"/>${utils.ssmlEscape(partOfSpeech)}<break strength="strong"/>${utils.ssmlEscape(definition)}<break strength="strong"/>${NEW_GAME}`,
+            NEW_GAME
+        );
+    } else {
+        renderTmpl1.call(this, `Definition of <b>${word}</b> not found.`, `Definition of, ${word}, not found. ${NEW_GAME}`, NEW_GAME);
+    }
+
 }
 
 
 function askForLetter(ssmlContent) {
     ssmlContent = ssmlContent || '';
     var content = 'Now say a letter, or you may say, progress, to check your progress. ';
-    renderTmpl.call(this, ssmlContent + content, content);
+    renderGuessTmpl.call(this, ssmlContent + content, content);
 }
 
 function promptNoActiveGame() {
     const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
 
     const template = builder.setTitle(TITLE)
-                            .setTextContent(makePlainText(`There is no game yet. ${NEW_GAME}`))
-                            .build();
+        .setTextContent(makePlainText(`There is no game yet. ${NEW_GAME}`))
+        .build();
 
     this.response.speak(`There is no game yet. ${NEW_GAME}`)
-                .listen(NEW_GAME)
-                .renderTemplate(template);
+        .listen(NEW_GAME)
+        .renderTemplate(template);
     this.emit(':responseReady');
 }
 
@@ -71,7 +100,7 @@ function answer(letter) {
     }
     letter = letter.toLowerCase();
     if (this.attributes['guessedLetters'].indexOf(letter) !== -1) {
-        askForLetter.call(this, `You've guessed <say-as interpret-as="spell-out">${letter}</say-as> already. Try another letter. `);
+        askForLetter.call(this, `You've guessed, <say-as interpret-as="spell-out">${letter}</say-as>, already. Try another letter. `);
         return;
     }
     this.attributes['guessedLetters'].push(letter);
@@ -85,22 +114,22 @@ function answer(letter) {
     }
     var ssmlContent = '';
     if (positions.length === 0) {
-        ssmlContent += `Oh no, letter <say-as interpret-as="spell-out">${letter}</say-as> isn't in the word. `
+        ssmlContent += `Oh no, letter, <say-as interpret-as="spell-out">${letter}</say-as>, isn't in the word. `
         this.attributes['badGuessCnt'] += 1;
-        this.attributes['misses'].push(letter)
+        this.attributes['misses'].push(letter);
         if (this.attributes['badGuessCnt'] >= MAX_BAD_GUESS) {
             cleanup.call(this);
             ssmlContent += `Sorry! you've been hanged! The word is, ${word}, which is spelt, <say-as interpret-as="spell-out">${word}</say-as>. ${NEW_GAME} `;
-            renderTmpl.call(this, ssmlContent, NEW_GAME);
+            renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
             return;
         }
     } else {
-        ssmlContent += `Letter <say-as interpret-as="spell-out">${letter}</say-as> is at ${positions.length === 1 ? 'position' : 'positions'} ${positions.map(x => x + 1).join(', ')}. `;
+        ssmlContent += `Letter, <say-as interpret-as="spell-out">${letter}</say-as>, is at ${positions.length === 1 ? 'position' : 'positions'} ${positions.map(x => x + 1).join(', ')}. `;
     }
     if (this.attributes['guessed'].indexOf('_') === -1) {
         cleanup.call(this);
         ssmlContent += `Great! You got the word, ${word}, which is spelt, <say-as interpret-as="spell-out">${word}</say-as>. ${NEW_GAME}`;
-        renderTmpl.call(this, ssmlContent, NEW_GAME);
+        renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
         return;
     } else {
         askForLetter.call(this, ssmlContent);
@@ -127,7 +156,7 @@ function newWord(category) {
 }
 
 function readGuessed(guessed) {
-    return guessed.split('').map(function(letter) {
+    return guessed.split('').map(function (letter) {
         if (letter === '_') {
             return 'dot';
         } else if (letter === ' ') {
@@ -140,7 +169,7 @@ function readGuessed(guessed) {
 
 function getLetterCount(word) {
     var cnt = 0;
-    for (var i=0;i<word.length;i++) {
+    for (var i = 0; i < word.length; i++) {
         var char = word.charAt(i);
         if (char >= 'a' && char <= 'z') cnt++;
     }
@@ -158,6 +187,24 @@ function progress() {
     askForLetter.call(this, ssmlContent)
 }
 
+function dictionary() {
+    var that = this;
+    var word = this.attributes['word'];
+    var url = `http://api.wordnik.com:80/v4/word.json/${word}/definitions?limit=1&includeRelated=false&useCanonical=false&sourceDictionaries=wiktionary&includeTags=false&api_key=${WORDNIK_API_KEY}`;
+    axios.get(url)
+        .then(function (response) {
+            if (!response.data || response.data.length === 0) {
+                displayDictResult.call(that, word, null, null, null);
+            } else {
+                var obj = response.data[0];
+                displayDictResult.call(that, obj.word, obj.partOfSpeech, obj.text, obj.attributionText);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
 var handlers = {
     'LaunchRequest': function () {
         this.emit('AMAZON.HelpIntent');
@@ -170,6 +217,9 @@ var handlers = {
     },
     'Progress': function () {
         progress.call(this);
+    },
+    'Dictionary': function () {
+        dictionary.call(this);
     },
     'AMAZON.HelpIntent': function () {
         var speechOutput = `Welcome to Hangman Game! I'll pick a word, you'll guess it. To begin the game, pick a category from ${CATEGORIES.join(', ')}`;
