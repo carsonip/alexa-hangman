@@ -141,6 +141,8 @@ function answer(letter) {
             ssmlContent += `Sorry! You've been hanged! The word is, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME} `;
             renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
             return;
+        } else {
+            ssmlContent += `You are ${MAX_BAD_GUESS - this.attributes['badGuessCnt']} steps away from hanging. `
         }
     } else {
         ssmlContent += `Letter, <say-as interpret-as="spell-out">${letter}</say-as>, is at ${positions.length === 1 ? 'position' : 'positions'} ${positions.map(x => x + 1).join(', ')}. `;
@@ -203,7 +205,8 @@ function progress() {
         return;
     }
     var guessed = this.attributes['guessed'];
-    var ssmlContent = `The word consists of ${getLetterCount(word)} letters. You've got ${getLetterCount(guessed)} of them. 'Dot' indicates the unknown letters in the word. Your progress is, ${readGuessed(guessed)}<break strength="strong"/>`;
+    var badGuessCnt = this.attributes['badGuessCnt'];
+    var ssmlContent = `The word consists of ${getLetterCount(word)} letters. You've got ${getLetterCount(guessed)} of them. 'Dot' indicates the unknown letters in the word. Your progress is, ${readGuessed(guessed)}<break strength="strong"/> You are ${MAX_BAD_GUESS - badGuessCnt} steps away from hanging. `;
     askForLetter.call(this, ssmlContent)
 }
 
