@@ -33,44 +33,58 @@ const DICTIONARY = `Say, dictionary, to see the definition of this word. `;
 
 
 function renderGuessTmpl(speechOutput, reprompt) {
-    const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+    if (this.event.context.System.device.supportedInterfaces.Display) {
+        const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
 
-    const template = builder.setTitle(TITLE)
-        .setTextContent(makeRichText(`Word: ${this.attributes['guessed'].split('').join(' ')}<br/>Misses: ${this.attributes['misses'].join(',')}`))
-        .setImage(ImageUtils.makeImage(`${BASE_URL}img/hangman/${this.attributes['badGuessCnt']}.png`))
-        .build();
-
-    this.response.speak(speechOutput)
-        .listen(reprompt)
-        .renderTemplate(template);
-    this.emit(':responseReady');
+        const template = builder.setTitle(TITLE)
+            .setTextContent(makeRichText(`Word: ${this.attributes['guessed'].split('').join(' ')}<br/>Misses: ${this.attributes['misses'].join(',')}`))
+            .setImage(ImageUtils.makeImage(`${BASE_URL}img/hangman/${this.attributes['badGuessCnt']}.png`))
+            .build();
+    
+        this.response.speak(speechOutput)
+            .listen(reprompt)
+            .renderTemplate(template);
+        this.emit(':responseReady');
+    } else {
+        this.emit(':ask', speechOutput, reprompt);
+    }
 }
 
 function renderTmpl1(richText, speechOutput, reprompt) {
-    const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+    if (this.event.context.System.device.supportedInterfaces.Display) {
+        const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
 
-    const template = builder.setTitle(TITLE)
-        .setTextContent(makeRichText(richText))
-        .build();
-
-    this.response.speak(speechOutput)
-        .listen(reprompt)
-        .renderTemplate(template);
-    this.emit(':responseReady');
+        const template = builder.setTitle(TITLE)
+            .setTextContent(makeRichText(richText))
+            .build();
+    
+        this.response.speak(speechOutput)
+            .listen(reprompt)
+            .renderTemplate(template);
+        this.emit(':responseReady');
+    } else {
+        this.emit(':ask', speechOutput, reprompt);
+    }
 }
 
 function renderWelcome() {
     var text = `To begin the game, pick a category from ${CATEGORIES.join(', ')}, or simply say, Start.`;
-    const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
-
-    const template = builder.setTitle(TITLE)
-        .setTextContent(makePlainText('Welcome to Hangman Game'), makePlainText(text))
-        .build();
-
-    this.response.speak(`Welcome to Hangman Game! I'll pick a word, you'll guess it. ${text} `)
-        .listen(text)
-        .renderTemplate(template);
-    this.emit(':responseReady');
+    var speechOutput = `Welcome to Hangman Game! I'll pick a word, you'll guess it. ${text} `;
+        
+    if (this.event.context.System.device.supportedInterfaces.Display) {
+        const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
+    
+        const template = builder.setTitle(TITLE)
+            .setTextContent(makePlainText('Welcome to Hangman Game'), makePlainText(text))
+            .build();
+    
+        this.response.speak(speechOutput)
+            .listen(text)
+            .renderTemplate(template);
+        this.emit(':responseReady');
+    } else {
+        this.emit(':ask', speechOutput, text);
+    }
 }
 
 function displayDictResult(word, partOfSpeech, definition, attributionText) {
