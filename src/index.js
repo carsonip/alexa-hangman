@@ -131,7 +131,10 @@ function answer(letter) {
         promptNoActiveGame.call(this);
         return;
     }
+    letter = letter || '';
     letter = letter.toLowerCase();
+    letter = letter.charAt(0);
+
     if (this.attributes['guessedLetters'].indexOf(letter) !== -1) {
         askForLetter.call(this, `You've guessed, <say-as interpret-as="spell-out">${letter}</say-as>, already. Try another letter. `);
         return;
