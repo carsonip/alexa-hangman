@@ -92,7 +92,7 @@ function displayDictResult(word, partOfSpeech, definition, attributionText) {
         renderTmpl1.call(
             this,
             `<font size="5">${utils.displayXmlEscape(word)}</font> <font size="2">(${utils.displayXmlEscape(partOfSpeech)})</font><br/>${utils.displayXmlEscape(definition)}<br/><br/><font size="2">${utils.displayXmlEscape(attributionText)}</font>`,
-            `${utils.ssmlEscape(word)}<break strength="strong"/>${utils.ssmlEscape(partOfSpeech)}<break strength="strong"/>${utils.ssmlEscape(definition)}<break strength="strong"/>${NEW_GAME}`,
+            `${utils.ssmlEscape(word)}<break strength="strong"/>${utils.ssmlEscape(partOfSpeech)}<break strength="strong"/>${utils.ssmlEscape(definition)}<break strength="x-strong"/>${NEW_GAME}`,
             NEW_GAME
         );
     } else {
@@ -102,7 +102,7 @@ function displayDictResult(word, partOfSpeech, definition, attributionText) {
 
 function askForLetter(ssmlContent) {
     ssmlContent = ssmlContent || '';
-    var content = 'Now say a letter, or you may say, progress, to check your progress. ';
+    var content = 'Now say a letter, or say, progress, to check your progress. ';
     renderGuessTmpl.call(this, ssmlContent + content, content);
 }
 
@@ -203,7 +203,7 @@ function readGuessed(guessed) {
         } else {
             return `<say-as interpret-as="spell-out">${letter}</say-as>`;
         }
-    }).join(' ');
+    }).join('<break strength="strong"/>');
 }
 
 function getLetterCount(word) {
@@ -223,7 +223,7 @@ function progress() {
     }
     var guessed = this.attributes['guessed'];
     var badGuessCnt = this.attributes['badGuessCnt'];
-    var ssmlContent = `The word consists of ${getLetterCount(word)} letters. You've got ${getLetterCount(guessed)} of them. 'Dot' indicates the unknown letters in the word. Your progress is, ${readGuessed(guessed)}<break strength="strong"/> You are ${MAX_BAD_GUESS - badGuessCnt} steps away from hanging. `;
+    var ssmlContent = `The word consists of ${getLetterCount(word)} letters. You've got ${getLetterCount(guessed)} of them. 'Dot' indicates the unknown letters in the word. Your progress is, ${readGuessed(guessed)}<break strength="x-strong"/> You are ${MAX_BAD_GUESS - badGuessCnt} steps away from hanging. `;
     askForLetter.call(this, ssmlContent)
 }
 
@@ -235,7 +235,7 @@ function dictionary() {
         promptNoActiveGame.call(this);
         return;
     } else if (word && !finish) {
-        askForLetter.call(this, `You're not allowed to check the dictionary now.`);
+        askForLetter.call(this, `You're not allowed to check the dictionary now. `);
         return;
     }
     var url = `http://api.wordnik.com:80/v4/word.json/${word}/definitions?limit=1&includeRelated=false&useCanonical=false&sourceDictionaries=wiktionary&includeTags=false&api_key=${WORDNIK_API_KEY}`;
