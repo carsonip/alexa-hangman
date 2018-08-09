@@ -11,15 +11,25 @@ const WORDNIK_API_KEY = process.env.WORDNIK_API_KEY;
 
 const TITLE = 'Hangman Game';
 const MAX_BAD_GUESS = 6;
-const POSITIVE_SENTENCE = [
+const POSITIVE_TERM = [
     'You\'ve got it! ',
     'That\'s right! ',
+    'Hooray! ',
+    'Bravo! ',
     'Impressive! ',
 ];
-const NEGATIVE_SENTENCE = [
-    'Woops! Try again! ',
-    'Oh no! Try again! ',
-    'That\'s incorrect! Try again! ',
+const NEGATIVE_TERM = [
+    'Oops! ',
+    'Oh no! ',
+    'Nope, ',
+    'Sorry, ',
+];
+const LETTER_PROMPT = [
+    'Now say a letter. ',
+    'Say a letter. ',
+    'What\'s next? ',
+    'Guess a letter now. ',
+    'Now give me a letter. ',
 ];
 const CATEGORIES = [
     'food', 'fruit', 'shopping', 'sports', 'travel'
@@ -102,7 +112,7 @@ function displayDictResult(word, partOfSpeech, definition, attributionText) {
 
 function askForLetter(ssmlContent) {
     ssmlContent = ssmlContent || '';
-    var content = 'Now say a letter, or say, progress, to check your progress. ';
+    var content = utils.randomItem(LETTER_PROMPT);
     renderGuessTmpl.call(this, ssmlContent + content, content);
 }
 
@@ -150,7 +160,7 @@ function answer(letter) {
     }
     var ssmlContent = '';
     if (positions.length === 0) {
-        ssmlContent += `Oh no, letter, <say-as interpret-as="spell-out">${letter}</say-as>, isn't in the word. `
+        ssmlContent += `${utils.randomItem(NEGATIVE_TERM)} no <say-as interpret-as="spell-out">${letter}</say-as>. `
         this.attributes['badGuessCnt'] += 1;
         this.attributes['misses'].push(letter);
         if (this.attributes['badGuessCnt'] >= MAX_BAD_GUESS) {
@@ -159,14 +169,15 @@ function answer(letter) {
             renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
             return;
         } else {
-            ssmlContent += `You are ${MAX_BAD_GUESS - this.attributes['badGuessCnt']} steps away from hanging. `
+            var stepsAway = MAX_BAD_GUESS - this.attributes['badGuessCnt'];
+            ssmlContent += `You are ${stepsAway} step${stepsAway===1?'':'s'} away from hanging. `
         }
     } else {
-        ssmlContent += `Letter, <say-as interpret-as="spell-out">${letter}</say-as>, is at ${positions.length === 1 ? 'position' : 'positions'} ${positions.map(x => x + 1).join(', ')}. `;
+        ssmlContent += `<say-as interpret-as="spell-out">${letter}</say-as>, is at ${positions.length === 1 ? 'position' : 'positions'} ${positions.map(x => x + 1).join(', ')}. `;
     }
     if (this.attributes['guessed'].indexOf('_') === -1) {
         this.attributes['finish'] = true;
-        ssmlContent += `Great! You've got the word, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME}`;
+        ssmlContent += `${utils.randomItem(POSITIVE_TERM)} You've got the word, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME}`;
         renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
         return;
     } else {
@@ -190,7 +201,7 @@ function newWord(category) {
     var word = utils.randomItem(vocabs[category]);
     this.attributes['word'] = word;
     this.attributes['guessed'] = word.replace(/[a-z]/g, '_');
-    var ssmlContent = `A new word is ready. It consists of ${word.length} letters. `;
+    var ssmlContent = `A new word is ready. It consists of ${word.length} letters. Say, progress, to check your progress at any time. `;
     askForLetter.call(this, ssmlContent)
 }
 
@@ -223,7 +234,8 @@ function progress() {
     }
     var guessed = this.attributes['guessed'];
     var badGuessCnt = this.attributes['badGuessCnt'];
-    var ssmlContent = `The word consists of ${getLetterCount(word)} letters. You've got ${getLetterCount(guessed)} of them. 'Dot' indicates the unknown letters in the word. Your progress is, ${readGuessed(guessed)}<break strength="x-strong"/> You are ${MAX_BAD_GUESS - badGuessCnt} steps away from hanging. `;
+    var stepsAway = MAX_BAD_GUESS - badGuessCnt;
+    var ssmlContent = `The word consists of ${getLetterCount(word)} letters. You've got ${getLetterCount(guessed)} of them. 'Dot' indicates the unknown letters in the word. Your progress is, ${readGuessed(guessed)}<break strength="x-strong"/> You are ${stepsAway} step${stepsAway===1?'':'s'} away from hanging. `;
     askForLetter.call(this, ssmlContent)
 }
 
