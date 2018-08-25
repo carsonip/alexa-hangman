@@ -1,0 +1,133 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "summary": "The classic hangman game, designed for Echo Show and other Alexa devices. Fun and Educational. Words are categorized. Contains a dictionary.",
+          "examplePhrases": [
+            "Alexa, start Hangman Game",
+            "Progress",
+            "Dictionary"
+          ],
+          "keywords": [
+            "hangman",
+            "dictionary",
+            "word",
+            "vocab",
+            "educational",
+            "game"
+          ],
+          "name": "Hangman Game - with display for Echo Show",
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/4a15/a6584c061ab34c0d902f8985cb17bae3/APP_ICON?versionId=um4Qy7XneAlQNQmQ14gRVjr.aTzG.yup&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535268859&Signature=tATlpuZ4pn%2FwRIoWLfjaAHp08uw%3D",
+          "description": "The classic hangman game with display. You may pick a category upon start or simply say \"Start\" to pick a random category. Guess the word by saying letters (e.g. \"A\"). If your Alexa device doesn't have a screen, you may still check your hangman progress by saying \"Progress\". When the game ends, you may check the definition of the word by saying \"Dictionary\".",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/7e92/be15e986b2c149db8eb6695687687dd0/APP_ICON_LARGE?versionId=NZXq9hxqr7P346oeVgIWq_bXbuRyPJmU&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535268860&Signature=4VJryslpMjET4s4i3OCLKUUIDQs%3D"
+        },
+        "en-CA": {
+          "summary": "The classic hangman game, designed for Echo Show and other Alexa devices. Fun and Educational. Words are categorized. Contains a dictionary.",
+          "examplePhrases": [
+            "Alexa, start Hangman Game",
+            "Progress",
+            "Dictionary"
+          ],
+          "keywords": [
+            "hangman",
+            "dictionary",
+            "word",
+            "vocab",
+            "educational",
+            "game"
+          ],
+          "name": "Hangman Game - with display for Echo Show",
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/c7ef/8464955b210f464d9758101cde43718b/APP_ICON?versionId=jCzN_JSL8s8g0a601n2.owEeFrmeawrN&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535268860&Signature=40DXHQUhDG5ij9A28GHbDSOBTe4%3D",
+          "description": "The classic hangman game with display. You may pick a category upon start or simply say \"Start\" to pick a random category. Guess the word by saying letters (e.g. \"A\"). If your Alexa device doesn't have a screen, you may still check your hangman progress by saying \"Progress\". When the game ends, you may check the definition of the word by saying \"Dictionary\".",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/5f28/72922a5d08e944d8969344c8f524eee3/APP_ICON_LARGE?versionId=eryrWwMkXeRf8eXCpSuhcMK7RhlggSOM&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535268860&Signature=piPc7HmqencMgQxWWnZTV%2FE0%2FUg%3D"
+        },
+        "en-IN": {
+          "summary": "The classic hangman game, designed for Echo Show and other Alexa devices. Fun and Educational. Words are categorized. Contains a dictionary.",
+          "examplePhrases": [
+            "Alexa, start Hangman Game",
+            "Progress",
+            "Dictionary"
+          ],
+          "keywords": [
+            "hangman",
+            "dictionary",
+            "word",
+            "vocab",
+            "educational",
+            "game"
+          ],
+          "name": "Hangman Game - with display for Echo Show",
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/e930/7aa6e7925d9249b7860c4684ad7d866a/APP_ICON?versionId=sjbdLu.rORnWbX5JpTPKTVQUjkATuAk8&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535268860&Signature=cOo48aeA4qClw7GEXGfAW7RkTHE%3D",
+          "description": "The classic hangman game with display. You may pick a category upon start or simply say \"Start\" to pick a random category. Guess the word by saying letters (e.g. \"A\"). If your Alexa device doesn't have a screen, you may still check your hangman progress by saying \"Progress\". When the game ends, you may check the definition of the word by saying \"Dictionary\".",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/f08b/2d853d1c5daf4a21bf18af01ae186a54/APP_ICON_LARGE?versionId=_WzhYU1QRvhIYQ2ROfao9AVzs_9lZ792&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535268860&Signature=KS9fFL5PCQwZyOdFiGFvEgcZVf4%3D"
+        },
+        "en-AU": {
+          "summary": "The classic hangman game, designed for Echo Show and other Alexa devices. Fun and Educational. Words are categorized. Contains a dictionary.",
+          "examplePhrases": [
+            "Alexa, start Hangman Game",
+            "Progress",
+            "Dictionary"
+          ],
+          "keywords": [
+            "hangman",
+            "dictionary",
+            "word",
+            "vocab",
+            "educational",
+            "game"
+          ],
+          "name": "Hangman Game - with display for Echo Show",
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/a086/d9f39dabc19544cb8396268fa74d690e/APP_ICON?versionId=voMJ2nmWM7jOO_E9orIZvjwok.Z0YLJs&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535268860&Signature=BCmDmuz5end%2F1yHifH2cfVyAqNA%3D",
+          "description": "The classic hangman game with display. You may pick a category upon start or simply say \"Start\" to pick a random category. Guess the word by saying letters (e.g. \"A\"). If your Alexa device doesn't have a screen, you may still check your hangman progress by saying \"Progress\". When the game ends, you may check the definition of the word by saying \"Dictionary\".",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/c285/7d03b5cf75c141d78250e83a1cf666d6/APP_ICON_LARGE?versionId=nL2fJOep1UI1v.xkvyXpweDvC_ic5blq&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535268860&Signature=ttXwwR%2FswkoG4yPVe6ul95rx9yw%3D"
+        },
+        "en-GB": {
+          "summary": "The classic hangman game, designed for Echo Show and other Alexa devices. Fun and Educational. Words are categorized. Contains a dictionary.",
+          "examplePhrases": [
+            "Alexa, start Hangman Game",
+            "Progress",
+            "Dictionary"
+          ],
+          "keywords": [
+            "hangman",
+            "dictionary",
+            "word",
+            "vocab",
+            "educational",
+            "game"
+          ],
+          "name": "Hangman Game - with display for Echo Show",
+          "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/6b47/bddb6e9c90e844f69a969fada4deaa0e/APP_ICON?versionId=NvGxcPtt1N_JjZDAeLkNzO4OOCSsrLKl&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535268860&Signature=a9PhgDadBimQokYG7rSQTYVRzv0%3D",
+          "description": "The classic hangman game with display. You may pick a category upon start or simply say \"Start\" to pick a random category. Guess the word by saying letters (e.g. \"A\"). If your Alexa device doesn't have a screen, you may still check your hangman progress by saying \"Progress\". When the game ends, you may check the definition of the word by saying \"Dictionary\".",
+          "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/e0d5/f2a8505f947b4128a2e6af3b5aa7cffd/APP_ICON_LARGE?versionId=XGxivLQwRZUBjdL16VgOV9iJntsbyhj7&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535268860&Signature=TJj%2FUgCxhb1M49hSTOVrwJtSAuc%3D"
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "N/A",
+      "category": "CHILDRENS_GAMES",
+      "distributionCountries": []
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "sourceDir": "lambda/custom"
+        },
+        "interfaces": [
+          {
+            "type": "RENDER_TEMPLATE"
+          }
+        ]
+      }
+    },
+    "manifestVersion": "1.0",
+    "permissions": [],
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+      "isChildDirected": true,
+      "usesPersonalInfo": false
+    }
+  }
+}

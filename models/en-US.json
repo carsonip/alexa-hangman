@@ -1,0 +1,272 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "hangman game",
+      "intents": [
+        {
+          "name": "Play",
+          "samples": [
+            "start",
+            "start game",
+            "play",
+            "play again"
+          ]
+        },
+        {
+          "name": "Progress",
+          "samples": [
+            "what's my Progress",
+            "Progress",
+            "my progress"
+          ]
+        },
+        {
+          "name": "Dictionary",
+          "samples": [
+            "dictionary",
+            "define"
+          ]
+        },
+        {
+          "name": "PickCategory",
+          "slots": [
+            {
+              "name": "Category",
+              "type": "CATEGORY"
+            }
+          ],
+          "samples": [
+            "{Category}"
+          ]
+        },
+        {
+          "name": "Answer",
+          "slots": [
+            {
+              "name": "Letter",
+              "type": "LETTER"
+            }
+          ],
+          "samples": [
+            "{Letter}"
+          ]
+        },
+        {
+          "name": "AMAZON.YesIntent"
+        },
+        {
+          "name": "AMAZON.NoIntent"
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": [
+            "help"
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent"
+        },
+        {
+          "name": "AMAZON.CancelIntent"
+        },
+        {
+          "name": "AMAZON.PreviousIntent"
+        },
+        {
+          "name": "AMAZON.NextIntent"
+        },
+        {
+          "name": "AMAZON.ScrollUpIntent"
+        },
+        {
+          "name": "AMAZON.ScrollLeftIntent"
+        },
+        {
+          "name": "AMAZON.ScrollDownIntent"
+        },
+        {
+          "name": "AMAZON.ScrollRightIntent"
+        },
+        {
+          "name": "AMAZON.PageUpIntent"
+        },
+        {
+          "name": "AMAZON.PageDownIntent"
+        },
+        {
+          "name": "AMAZON.MoreIntent"
+        },
+        {
+          "name": "AMAZON.NavigateSettingsIntent"
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "A"
+              }
+            },
+            {
+              "name": {
+                "value": "B"
+              }
+            },
+            {
+              "name": {
+                "value": "C"
+              }
+            },
+            {
+              "name": {
+                "value": "D"
+              }
+            },
+            {
+              "name": {
+                "value": "E"
+              }
+            },
+            {
+              "name": {
+                "value": "F"
+              }
+            },
+            {
+              "name": {
+                "value": "G"
+              }
+            },
+            {
+              "name": {
+                "value": "H"
+              }
+            },
+            {
+              "name": {
+                "value": "I"
+              }
+            },
+            {
+              "name": {
+                "value": "J"
+              }
+            },
+            {
+              "name": {
+                "value": "K"
+              }
+            },
+            {
+              "name": {
+                "value": "L"
+              }
+            },
+            {
+              "name": {
+                "value": "M"
+              }
+            },
+            {
+              "name": {
+                "value": "N"
+              }
+            },
+            {
+              "name": {
+                "value": "O"
+              }
+            },
+            {
+              "name": {
+                "value": "P"
+              }
+            },
+            {
+              "name": {
+                "value": "Q"
+              }
+            },
+            {
+              "name": {
+                "value": "R"
+              }
+            },
+            {
+              "name": {
+                "value": "S"
+              }
+            },
+            {
+              "name": {
+                "value": "T"
+              }
+            },
+            {
+              "name": {
+                "value": "U"
+              }
+            },
+            {
+              "name": {
+                "value": "V"
+              }
+            },
+            {
+              "name": {
+                "value": "W"
+              }
+            },
+            {
+              "name": {
+                "value": "X"
+              }
+            },
+            {
+              "name": {
+                "value": "Y"
+              }
+            },
+            {
+              "name": {
+                "value": "Z"
+              }
+            }
+          ],
+          "name": "LETTER"
+        },
+        {
+          "values": [
+            {
+              "name": {
+                "value": "food"
+              }
+            },
+            {
+              "name": {
+                "value": "fruit"
+              }
+            },
+            {
+              "name": {
+                "value": "shopping"
+              }
+            },
+            {
+              "name": {
+                "value": "sports"
+              }
+            },
+            {
+              "name": {
+                "value": "travel"
+              }
+            }
+          ],
+          "name": "CATEGORY"
+        }
+      ]
+    }
+  }
+}
