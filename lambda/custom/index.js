@@ -51,7 +51,7 @@ function renderGuessTmpl(speechOutput, reprompt) {
         const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
 
         const template = builder.setTitle(TITLE)
-            .setTextContent(makeRichText(`Word: ${this.attributes['guessed'].split('').join(' ')}<br/>Misses: ${this.attributes['misses'].join(',')}`))
+            .setTextContent(makeRichText(`Word: ${this.attributes['guessed'].split('').join('&#160;')}<br/>Misses: ${this.attributes['misses'].join(',')}`))
             .setImage(ImageUtils.makeImage(`${BASE_URL}img/hangman/${this.attributes['badGuessCnt']}.png`))
             .build();
     
@@ -204,7 +204,7 @@ function newWord(category) {
     var word = utils.randomItem(vocabs[category]);
     this.attributes['word'] = word;
     this.attributes['guessed'] = word.replace(/[a-z]/g, '_');
-    var ssmlContent = `A new word is ready. It consists of ${word.length} letters. Say, progress, to check your progress at any time. `;
+    var ssmlContent = `A new word is ready. It consists of ${getLetterCount(word)} letters. Say, progress, to check your progress at any time. `;
     askForLetter.call(this, ssmlContent)
 }
 
