@@ -7,3 +7,7 @@ The classic hangman game.
 Word lists from https://github.com/imsky/wordlists
 
 WIP.
+
+https://en.wikipedia.org/wiki/Avalanche
+https://en.wikipedia.org/wiki/Landslide
+https://en.wikipedia.org/wiki/Natural_disaster

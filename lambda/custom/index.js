@@ -4,12 +4,13 @@ const makePlainText = Alexa.utils.TextUtils.makePlainText;
 const makeRichText = Alexa.utils.TextUtils.makeRichText;
 const ImageUtils = Alexa.utils.ImageUtils;
 const utils = require('./utils.js');
+const descriptions = require('./description/disaster.json');
 const axios = require('axios');
 const APP_ID = process.env.APP_ID || '';  // TODO replace with your app ID (OPTIONAL).
 const BASE_URL = process.env.BASE_URL;
 const WORDNIK_API_KEY = process.env.WORDNIK_API_KEY;
 
-const TITLE = 'Hangman Game';
+const TITLE = 'Natural Disasters Hangman';
 const MAX_BAD_GUESS = 6;
 const POSITIVE_TERM = [
     'You\'ve got it! ',
@@ -32,13 +33,13 @@ const LETTER_PROMPT = [
     'Now give me a letter. ',
 ];
 const CATEGORIES = [
-    'food', 'fruit', 'shopping', 'sports', 'travel'
+    'disaster'
 ];
 var vocabs = {};
 for (var i = 0; i < CATEGORIES.length; i++) {
     vocabs[CATEGORIES[i]] = require(`./wordlist/${CATEGORIES[i]}.json`);
 }
-const NEW_GAME = `Say, start, to begin a new game, or you can pick a category from ${CATEGORIES.join(', ')}. `
+const NEW_GAME = `Say, start, to begin a new game.. `
 const DICTIONARY = `Say, dictionary, to see the definition of this word. `;
 
 
@@ -78,14 +79,14 @@ function renderTmpl1(richText, speechOutput, reprompt) {
 }
 
 function renderWelcome() {
-    var text = `To begin the game, pick a category from ${CATEGORIES.join(', ')}, or simply say, Start.`;
-    var speechOutput = `Welcome to Hangman Game! I'll pick a word, you'll guess it. ${text} `;
+    var text = `To begin the game, simply say, Start.`;
+    var speechOutput = `Welcome to ${TITLE}! I'll pick a word, you'll guess it. ${text} `;
         
     if (this.event.context.System.device.supportedInterfaces.Display) {
         const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
     
         const template = builder.setTitle(TITLE)
-            .setTextContent(makePlainText('Welcome to Hangman Game'), makePlainText(text))
+            .setTextContent(makePlainText(`Welcome to ${TITLE}`), makePlainText(text))
             .build();
     
         this.response.speak(speechOutput)
@@ -108,6 +109,16 @@ function displayDictResult(word, partOfSpeech, definition, attributionText) {
     } else {
         renderTmpl1.call(this, `Definition of <b>${word}</b> not found.`, `Definition of, ${word}, not found. ${NEW_GAME}`, NEW_GAME);
     }
+}
+
+function displayDescription(word, description) {
+    let attributionText = "Source: Wikipedia (https://en.wikipedia.org/wiki/Natural_disaster)"
+    renderTmpl1.call(
+        this,
+        `<font size="5">${utils.displayXmlEscape(word)}</font> <br/>${utils.displayXmlEscape(description)}<br/><br/><font size="2">${utils.displayXmlEscape(attributionText)}</font>`,
+        `${utils.ssmlEscape(word)}<break strength="strong"/>${utils.ssmlEscape(description)}<break strength="x-strong"/>${NEW_GAME}`,
+        NEW_GAME
+    );
 }
 
 function askForLetter(ssmlContent) {
@@ -239,6 +250,12 @@ function progress() {
     askForLetter.call(this, ssmlContent)
 }
 
+function knowMore() {
+    var word = this.attributes['word'];
+    var description = descriptions[word];
+    displayDescription.call(this, word, description)
+}
+
 function dictionary() {
     var that = this;
     var word = this.attributes['word'];
@@ -279,7 +296,7 @@ var handlers = {
         progress.call(this);
     },
     'Dictionary': function () {
-        dictionary.call(this);
+        knowMore.call(this);
     },
     'AMAZON.HelpIntent': function () {
         renderWelcome.call(this);

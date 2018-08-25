@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "hangman game",
+      "invocationName": "natural disasters hangman",
       "intents": [
         {
           "name": "Play",
@@ -25,18 +25,6 @@
           "samples": [
             "dictionary",
             "define"
-          ]
-        },
-        {
-          "name": "PickCategory",
-          "slots": [
-            {
-              "name": "Category",
-              "type": "CATEGORY"
-            }
-          ],
-          "samples": [
-            "{Category}"
           ]
         },
         {
@@ -98,6 +86,9 @@
         },
         {
           "name": "AMAZON.NavigateSettingsIntent"
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent"
         }
       ],
       "types": [
@@ -235,36 +226,6 @@
             }
           ],
           "name": "LETTER"
-        },
-        {
-          "values": [
-            {
-              "name": {
-                "value": "food"
-              }
-            },
-            {
-              "name": {
-                "value": "fruit"
-              }
-            },
-            {
-              "name": {
-                "value": "shopping"
-              }
-            },
-            {
-              "name": {
-                "value": "sports"
-              }
-            },
-            {
-              "name": {
-                "value": "travel"
-              }
-            }
-          ],
-          "name": "CATEGORY"
         }
       ]
     }
