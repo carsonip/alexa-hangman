@@ -8,7 +8,10 @@ const descriptions = require('./description/disaster.json');
 const axios = require('axios');
 const APP_ID = process.env.APP_ID || '';  // TODO replace with your app ID (OPTIONAL).
 const BASE_URL = process.env.BASE_URL;
-const WORDNIK_API_KEY = process.env.WORDNIK_API_KEY;
+
+const states = {
+    FINISH_GAME: '_FINISH_GAME',
+}
 
 const TITLE = 'Natural Disasters Hangman';
 const MAX_BAD_GUESS = 6;
@@ -39,8 +42,8 @@ var vocabs = {};
 for (var i = 0; i < CATEGORIES.length; i++) {
     vocabs[CATEGORIES[i]] = require(`./wordlist/${CATEGORIES[i]}.json`);
 }
-const NEW_GAME = `Say, start, to begin a new game.. `
-const DICTIONARY = `Say, dictionary, to see the definition of this word. `;
+const NEW_GAME = `Say, start, to begin a new game. `
+const KNOW_MORE = `Do you want to know more about this natural disaster? Say no, if you want to start a new game. `;
 
 
 function renderGuessTmpl(speechOutput, reprompt) {
@@ -95,19 +98,6 @@ function renderWelcome() {
         this.emit(':responseReady');
     } else {
         this.emit(':ask', speechOutput, text);
-    }
-}
-
-function displayDictResult(word, partOfSpeech, definition, attributionText) {
-    if (definition) {
-        renderTmpl1.call(
-            this,
-            `<font size="5">${utils.displayXmlEscape(word)}</font> <font size="2">(${utils.displayXmlEscape(partOfSpeech)})</font><br/>${utils.displayXmlEscape(definition)}<br/><br/><font size="2">${utils.displayXmlEscape(attributionText)}</font>`,
-            `${utils.ssmlEscape(word)}<break strength="strong"/>${utils.ssmlEscape(partOfSpeech)}<break strength="strong"/>${utils.ssmlEscape(definition)}<break strength="x-strong"/>${NEW_GAME}`,
-            NEW_GAME
-        );
-    } else {
-        renderTmpl1.call(this, `Definition of <b>${word}</b> not found.`, `Definition of, ${word}, not found. ${NEW_GAME}`, NEW_GAME);
     }
 }
 
@@ -175,8 +165,9 @@ function answer(letter) {
         this.attributes['badGuessCnt'] += 1;
         this.attributes['misses'].push(letter);
         if (this.attributes['badGuessCnt'] >= MAX_BAD_GUESS) {
+            this.handler.state = states.FINISH_GAME;
             this.attributes['finish'] = true;
-            ssmlContent += `Sorry! You've been hanged! The word is, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME} `;
+            ssmlContent += `Sorry! You've been hanged! The word is, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${KNOW_MORE} `;
             renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
             return;
         } else {
@@ -187,8 +178,9 @@ function answer(letter) {
         ssmlContent += `<say-as interpret-as="spell-out">${letter}</say-as>, is at ${positions.length === 1 ? 'position' : 'positions'} ${positions.map(x => x + 1).join(', ')}. `;
     }
     if (this.attributes['guessed'].indexOf('_') === -1) {
+        this.handler.state = states.FINISH_GAME;
         this.attributes['finish'] = true;
-        ssmlContent += `${utils.randomItem(POSITIVE_TERM)} You've got the word, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${DICTIONARY} ${NEW_GAME}`;
+        ssmlContent += `${utils.randomItem(POSITIVE_TERM)} You've got the word, ${word}, which is spelt, <say-as interpret-as="spell-out"><prosody rate="x-slow">${word}</prosody></say-as>. ${KNOW_MORE} `;
         renderGuessTmpl.call(this, ssmlContent, NEW_GAME);
         return;
     } else {
@@ -256,32 +248,6 @@ function knowMore() {
     displayDescription.call(this, word, description)
 }
 
-function dictionary() {
-    var that = this;
-    var word = this.attributes['word'];
-    var finish = this.attributes['finish'];
-    if (!word) {
-        promptNoActiveGame.call(this);
-        return;
-    } else if (word && !finish) {
-        askForLetter.call(this, `You're not allowed to check the dictionary now. `);
-        return;
-    }
-    var url = `http://api.wordnik.com:80/v4/word.json/${word}/definitions?limit=1&includeRelated=false&useCanonical=false&sourceDictionaries=wiktionary&includeTags=false&api_key=${WORDNIK_API_KEY}`;
-    axios.get(url)
-        .then(function (response) {
-            if (!response.data || response.data.length === 0) {
-                displayDictResult.call(that, word, null, null, null);
-            } else {
-                var obj = response.data[0];
-                displayDictResult.call(that, obj.word, obj.partOfSpeech, obj.text, obj.attributionText);
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
-
 var handlers = {
     'LaunchRequest': function () {
         this.emit('AMAZON.HelpIntent');
@@ -294,9 +260,6 @@ var handlers = {
     },
     'Progress': function () {
         progress.call(this);
-    },
-    'Dictionary': function () {
-        knowMore.call(this);
     },
     'AMAZON.HelpIntent': function () {
         renderWelcome.call(this);
@@ -313,12 +276,27 @@ var handlers = {
         this.emit(':responseReady');
     },
     'SessionEndedRequest': function () {
-        console.log(`Session ended: ${this.event.request.reason}`);
+        // console.log(`Session ended: ${this.event.request.reason}`);
     },
     'Answer': function () {
         answer.call(this, this.event.request.intent.slots.Letter.value);
     },
 };
+
+let finishGameHandlers = Alexa.CreateStateHandler(states.FINISH_GAME, Object.assign({}, handlers, {
+    'KnowMore': function () {
+        knowMore.call(this);
+        this.handler.state = null;
+    },
+    'AMAZON.YesIntent': function () {
+        knowMore.call(this);
+        this.handler.state = null;
+    },
+    'AMAZON.NoIntent': function () {
+        newWord.call(this);
+        this.handler.state = null;
+    },
+}));
 
 exports.handler = function (event, context, callback) {
     var alexa = Alexa.handler(event, context);
@@ -326,6 +304,6 @@ exports.handler = function (event, context, callback) {
     // TODO: i18n
     // To enable string internationalization (i18n) features, set a resources object.
     // alexa.resources = languageStrings;
-    alexa.registerHandlers(handlers);
+    alexa.registerHandlers(handlers, finishGameHandlers);
     alexa.execute();
 };
