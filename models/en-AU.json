@@ -98,6 +98,9 @@
         },
         {
           "name": "AMAZON.NavigateSettingsIntent"
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent"
         }
       ],
       "types": [
